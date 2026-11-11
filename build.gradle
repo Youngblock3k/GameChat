@@ -1,0 +1,78 @@
+plugins {
+	id 'java'
+	id 'com.gradleup.shadow' version '9.6.1'
+}
+
+group = 'me.ryxer'
+version = '2.0.0'
+
+// One jar per Minecraft version:  gradlew build -Ptarget=26.2   (default 26.3)
+def targets = [
+	'1.21.11': [api: 'io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT', java: 21, apiVersion: '1.21'],
+	'26.1'   : [api: 'io.papermc.paper:paper-api:26.1.2.build.74-stable', java: 25, apiVersion: '26.1'],
+	'26.2'   : [api: 'io.papermc.paper:paper-api:26.2.build.135-stable', java: 25, apiVersion: '26.2'],
+	'26.3'   : [api: 'io.papermc.paper:paper-api:26.3.build.248-stable', java: 25, apiVersion: '26.3'],
+]
+def target = (findProperty('target') ?: '26.3').toString()
+def t = targets[target]
+if (t == null) throw new GradleException("Unknown target '$target'. Use one of: ${targets.keySet()}")
+
+repositories {
+	mavenCentral()
+	maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+	maven { url = 'https://repo.extendedclip.com/releases/' }
+	maven { url = 'https://jitpack.io' }
+}
+
+dependencies {
+	compileOnly t.api
+	compileOnly('com.github.MilkBowl:VaultAPI:1.7') { transitive = false }
+	compileOnly('me.clip:placeholderapi:2.11.6') { transitive = false }
+	compileOnly 'org.apache.logging.log4j:log4j-core:2.24.3'
+	// Discord bot library, shaded into the jar and moved to our own package so it can't clash with other plugins
+	implementation('net.dv8tion:JDA:6.7.0') {
+		exclude module: 'opus-java'      // voice, not used
+		exclude module: 'tink'           // voice encryption, not used
+		exclude group: 'org.slf4j'       // the server already has slf4j
+	}
+
+	testImplementation t.api
+	testImplementation platform('org.junit:junit-bom:5.11.4')
+	testImplementation 'org.junit.jupiter:junit-jupiter'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.release = t.java
+	options.encoding = 'UTF-8'
+	options.compilerArgs << '-Xlint:all,-processing,-serial,-this-escape'
+}
+
+processResources {
+	inputs.property 'version', project.version
+	inputs.property 'apiVersion', t.apiVersion
+	filesMatching('plugin.yml') { expand version: project.version, apiVersion: t.apiVersion }
+}
+
+shadowJar {
+	archiveBaseName = 'GyxerChat'
+	archiveClassifier = ''
+	archiveVersion = "${project.version}-mc${target}"
+	def lib = 'me.ryxer.gyxerchat.libs'
+	relocate 'net.dv8tion', "${lib}.jda"
+	relocate 'okhttp3', "${lib}.okhttp3"
+	relocate 'okio', "${lib}.okio"
+	relocate 'kotlin', "${lib}.kotlin"
+	relocate 'com.fasterxml', "${lib}.fasterxml"
+	relocate 'gnu.trove', "${lib}.trove"
+	relocate 'com.neovisionaries', "${lib}.neovisionaries"
+	relocate 'org.apache.commons.collections4', "${lib}.collections4"
+	relocate 'org.jetbrains.annotations', "${lib}.annotations"
+	relocate 'org.intellij', "${lib}.intellij"
+	exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/versions/*/module-info.class', 'module-info.class'
+	mergeServiceFiles()
+}
+jar { archiveClassifier = 'plain' }
+tasks.named('assemble') { dependsOn shadowJar }
+
+test { useJUnitPlatform() }

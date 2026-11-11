@@ -1,0 +1,8 @@
+build/
+build-*/
+.gradle/
+dist/
+out/
+*.log
+build-*.txt
+testservers/
