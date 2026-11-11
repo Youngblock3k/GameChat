@@ -1,0 +1,51 @@
+name: GyxerChat
+version: '${version}'
+main: me.ryxer.gyxerchat.GyxerChat
+api-version: '${apiVersion}'
+author: 'RyxerEverlynx'
+description: 'The all in one chat solution.'
+softdepend: [PlaceholderAPI, Vault, LuckPerms]
+
+commands:
+  nick: { aliases: [nickname], permission: gyxerchat.nick, description: 'Set your nickname', usage: '/nick <name>' }
+  unnick: { aliases: [realname], permission: gyxerchat.nick, description: 'Remove your nickname' }
+  chatadmin: { permission: everlynx.chat.admin, description: 'Open the chat admin menu' }
+  mute: { permission: everlynx.chat.admin, description: 'Mute a player forever', usage: '/mute <player> <reason>' }
+  tempmute: { permission: everlynx.chat.admin, description: 'Mute a player for a time', usage: '/tempmute <player> <time> <reason>' }
+  unmute: { permission: everlynx.chat.admin, description: 'Unmute a player', usage: '/unmute <player>' }
+  ban: { permission: everlynx.chat.admin, description: 'Ban a player forever', usage: '/ban <player> <reason>' }
+  tempban: { permission: everlynx.chat.admin, description: 'Ban a player for a time', usage: '/tempban <player> <time> <reason>' }
+  unban: { permission: everlynx.chat.admin, description: 'Unban a player', usage: '/unban <player>' }
+  warn: { permission: everlynx.chat.admin, description: 'Warn a player', usage: '/warn <player> <reason>' }
+  announce: { aliases: [bc], permission: everlynx.chat.admin, description: 'Broadcast a message', usage: '/announce <message>' }
+  chatcolor: { description: 'Pick your chat color' }
+  chatreload: { permission: everlynx.chat.admin, description: 'Reload GyxerChat' }
+  clearchat: { aliases: [cc], permission: everlynx.chat.admin, description: 'Clear the chat' }
+  mutechat: { aliases: [lockchat], permission: everlynx.chat.admin, description: 'Lock or unlock the global chat' }
+  staffchat: { aliases: [sc], permission: everlynx.chat.staff, description: 'Toggle staff chat or send one staff message' }
+  socialspy: { aliases: [spy], permission: everlynx.spy, description: 'See private messages' }
+  createtag: { permission: everlynx.chat.admin, description: 'Create a chat tag', usage: '/createtag <id> <display>' }
+  deletetag: { permission: everlynx.chat.admin, description: 'Delete a chat tag', usage: '/deletetag <id>' }
+  msg: { aliases: [w, tell, whisper, m], description: 'Send a private message', usage: '/msg <player> <message>' }
+  reply: { aliases: [r], description: 'Reply to your last private message', usage: '/r <message>' }
+  ignore: { aliases: [block], description: 'Ignore a player', usage: '/ignore <add|remove|list> [player]' }
+  tags: { description: 'Pick a chat tag' }
+  tpa: { description: 'Ask to teleport to a player', usage: '/tpa <player>' }
+  tpahere: { description: 'Ask a player to teleport to you', usage: '/tpahere <player>' }
+  tpaccept: { aliases: [tpayes], description: 'Accept a teleport request' }
+  tpadeny: { aliases: [tpano], description: 'Deny a teleport request' }
+  tpacancel: { description: 'Cancel your teleport request' }
+  tpatoggle: { description: 'Auto-accept teleport requests' }
+  settings: { aliases: [chatsettings], description: 'Your personal chat settings' }
+
+permissions:
+  gyxerchat.nick: { default: op, description: 'Use /nick' }
+  gyxerchat.nick.colors: { default: op, description: 'Use & color codes in /nick' }
+  gyxerchat.chat.colors: { default: true, description: 'Use & color codes in chat (turn off with chat-settings.allow-color-codes)' }
+  gyxerchat.clearchat.bypass: { default: false, description: 'Your chat is not cleared by /clearchat' }
+  gyxerchat.chatcolor.gradient: { default: op }
+  everlynx.chat.admin:
+    default: op
+    children: { everlynx.chat.staff: true, everlynx.spy: true }
+  everlynx.chat.staff: { default: op }
+  everlynx.spy: { default: op }
