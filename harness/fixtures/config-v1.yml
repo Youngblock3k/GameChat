@@ -1,0 +1,259 @@
+# +---------------------------------------------------------------------------+
+# |                                                                           |
+# |                          GyxerChat Elite V3.0                             |
+# |                      The All-in-One Chat Solution                         |
+# |                                                                           |
+# +---------------------------------------------------------------------------+
+
+# =============================================================================
+# GLOBAL SETTINGS
+# =============================================================================
+
+# The main prefix used for general plugin responses (Mutes, Warns, Reloads).
+prefix: "&8[&bGyxerChat&8] &r"
+
+# Standard Chat Formatting
+# You can use any PlaceholderAPI placeholders here (e.g., %vault_prefix%).
+# {player}  - The player's name.
+# {tag}     - The player's active custom tag (from /tags).
+# {message} - The text the player typed.
+chat-format: "%luckperms_prefix% &7{player} {tag}&8» &f{message}"
+
+# =============================================================================
+# INTERACTIVE CHAT (HOVER & CLICK)
+# =============================================================================
+# Adds modern interactability to the chat.
+interactive-chat:
+  enabled: true
+  # The command suggested or run when clicking a player's name.
+  click-command: "/msg {player} "
+  # Text displayed when hovering over a player's name.
+  # Supports PlaceholderAPI + internal: {health}, {ping}, {tag}, {player}.
+  hover-text:
+    - "&b&l{player}"
+    - "&8&m-------------------"
+    - "&7Health: &c{health}❤"
+    - "&7Ping: &a{ping}ms"
+    - "&7Tag: {tag}"
+    - "&8&m-------------------"
+    - "&eClick to send a message!"
+
+# =============================================================================
+# DISCORD INTEGRATION (JDA SYNC)
+# =============================================================================
+# Connects your Minecraft server directly to a Discord bot.
+# IMPORTANT: Enable "Message Content Intent" in the Discord Developer Portal.
+discord:
+  enabled: false
+  chat-enabled: true
+  console-enabled: true
+  
+  # Your unique Bot Token from the Discord Dev Portal.
+  bot-token: "YOUR_BOT_TOKEN_HERE"
+  # Channel ID where Minecraft chat will be mirrored.
+  chat-channel-id: "000000000000000000"
+  # Channel ID for remote console access (Keep this channel private!).
+  console-channel-id: "000000000000000000"
+
+  # Visual formats for Discord messages. Supports standard Discord Markdown.
+  formats:
+    # Used when a player has a prefix (e.g., [Owner]).
+    mc-to-discord: "**{prefix} {player}** » {message}"
+    # Used when a player has no prefix.
+    mc-to-discord-no-prefix: "**{player}** » {message}"
+    # Format for Discord messages appearing in Minecraft.
+    discord-to-mc: "&8[&9Discord&8] &b{author} &8» &7{message}"
+    # Status alerts sent to Discord.
+    join: "**+ {player}** joined the server."
+    quit: "**- {player}** left the server."
+    death: "☠ **{player}** died."
+
+# =============================================================================
+# AUTO-BROADCASTER
+# =============================================================================
+# Sends scheduled announcements to the server and Discord.
+auto-broadcaster:
+  enabled: true
+  # Delay between announcements (in seconds).
+  interval-seconds: 180
+  # Mirror announcements to the Discord chat channel.
+  discord-sync: false
+  # List of messages to cycle through.
+  messages:
+    - "&eDon't forget to join our &bDiscord&e: &ndiscord.gg/example"
+    - "&aVoting supports the server and gives you free keys! Use &d/vote"
+    - "&cFound a bug or need help? Please open a ticket!"
+
+# =============================================================================
+# MODERATION & FILTERS
+# =============================================================================
+chat-settings:
+  # Prevents lag exploits/glitches by blocking special unicode characters.
+  block-unicode: true
+  
+  # Nickname Settings
+  max-nick-length: 10
+
+  # Plays a sound and highlights names when @Mentioned.
+  mentions-enabled: true
+  mention-color: "&b"
+  
+  # Anti-Caps logic: Prevents yelling in chat.
+  anti-caps-enabled: true
+  # Percentage of capital letters needed to trigger (70 means 7 out of 10 letters).
+  anti-caps-percent: 70
+  # Minimum message length before checking for caps.
+  anti-caps-min-length: 5
+  
+  # Swear Filter Settings
+  swear-filter-enabled: true
+  # Word Blacklist: Blocked words are replaced with ***.
+  blocked-words:
+    - "fuck"
+    - "shit"
+    - "bitch"
+    - "nigger"
+    - "retard"
+    - "asshole"
+
+# =============================================================================
+# TELEPORTATION (TPA) SYSTEM
+# =============================================================================
+tpa-settings:
+  enabled: true
+  # Number of seconds a player must wait before teleporting.
+  cooldown-seconds: 5
+
+# =============================================================================
+# CHAT GAMES (ENGAGEMENT ENGINE)
+# =============================================================================
+# Fun minigames that reward active chatters.
+chat-games:
+  enabled: true
+  use-vault: true
+  # Command run to give rewards. {reward} is dynamic.
+  reward-command: "eco give {player} {reward}"
+  # Delay between games (in seconds).
+  interval-seconds: 300
+  
+  # Create an infinite number of custom games below!
+  # Use numbers as the ID (1, 2, 3, etc.).
+  games:
+    "1":
+      question: "Unscramble this word: &emniearctf"
+      ans: "minecraft"
+      prize: 1000
+    "2":
+      question: "Solve the math problem: &e15 + 25"
+      ans: "40"
+      prize: 500
+    "3":
+      question: "Type this fast: &eGyxerChat Elite"
+      ans: "GyxerChat Elite"
+      prize: 2000
+    "4":
+      question: "Trivia: &eWhat block is unbreakable in Survival?"
+      ans: "bedrock"
+      prize: 1500
+
+# =============================================================================
+# SYSTEM AUTOMATIONS
+# =============================================================================
+auto-punish:
+  enabled: true
+  # Max number of chat violations (swearing/spam) before punishment.
+  max-strikes: 3
+  # Command used for the automated punishment.
+  punish-command: "tempmute {player} 10m Auto-Punish: Max Violations"
+
+# =============================================================================
+# PLUGIN MESSAGES (LOCALIZATION)
+# =============================================================================
+custom-messages:
+  join-leave-enabled: true
+  death-enabled: true
+
+messages:
+  # General Alerts
+  no-permission: "&cYou do not have permission to use this!"
+  error-usage: "&cIncorrect usage: &e{usage}"
+  invalid-time: "&cInvalid time format! Use 10m, 1h, 1d, etc."
+  player-not-found: "&cThat player was not found online."
+  reload-success: "&aConfiguration and managers reloaded successfully!"
+  nick-set: "&aYour nickname has been set to: &r{nick}"
+  nick-reset: "&aYour nickname has been cleared!"
+  nick-too-long: "&cYour nickname is too long! Max length: &e{max}"
+  nick-taken: "&cYou cannot use that nickname! It belongs to another player."
+  
+  ignore-self: "&cYou cannot ignore yourself!"
+  ignore-add: "&cYou are now ignoring &e{target}&c. You will not see their messages."
+  ignore-remove: "&aYou are no longer ignoring &e{target}&a."
+  
+  # TPA System Messages
+  tpa-sent: "&aTeleport request sent to &e{target}&a."
+  tpa-received: "&e{sender} &ahas requested {type}. Type &e/tpaccept &aor &c/tpadeny&a."
+  tpa-no-requests: "&cYou have no pending teleport requests."
+  tpa-accepted-target: "&aYou accepted the request from &e{sender}&a."
+  tpa-denied-target: "&cYou denied the request from &e{sender}&c."
+  tpa-denied-sender: "&cYour teleport request to &e{target} &cwas denied."
+  tpa-expired: "&cYour teleport request to &e{target} &chas expired."
+  tpa-auto-accept: "&e{target} &ahas auto-accept enabled. Teleporting..."
+  tpa-toggle-on: "&aYou will now automatically accept TPA requests."
+  tpa-toggle-off: "&cYou will no longer automatically accept TPA requests."
+  tpa-starting: "&aTeleportation will commence in &c{time} &aseconds. Do not move."
+  tpa-moved: "&cTeleportation cancelled because you moved!"
+  tpa-actionbar: "&aTeleporting to &e{target} &ain &c{time} &aseconds"
+  
+  # Server Event Alerts
+  join: "&8[&a+&8] &7{player} joined."
+  quit: "&8[&c-&8] &7{player} left."
+  death: "&8[&c☠&8] &7{player} died."
+  
+  # Moderation System
+  mute-success: "&aSuccessfully muted &e{target} &afor: &f{reason}"
+  unmute-success: "&aSuccessfully unmuted &e{target}!"
+  warn-success: "&aWarned &e{target} &afor: &f{reason}"
+  warned: "&c&lᴡᴀʀɴɪɴɢ &8» &fYou have been warned for: &e{reason}"
+  chat-cleared: "&aᴄʜᴀᴛ ᴄʟᴇᴀʀᴇᴅ ʙʏ &e{player}"
+  color-set: "&aYour chat color has been updated!"
+  color-reset: "&aReset chat color for &e{target}"
+  color-gradient-set: "&aGradient applied successfully!"
+  
+  # Tags System
+  tag-created: "&aCreated tag &e{id} &awith display: &r{display}"
+  tag-deleted: "&cDeleted tag &e{id}&c globally!"
+  tag-equipped: "&aYou have successfully equipped the &r{tag} &atag!"
+  tag-removed: "&aYour active tag has been removed."
+  tag-no-permission: "&cYou need the permission &e{permission} &cto equip this tag!"
+  
+  # Social & Staff Systems
+  spy-enabled: "&aSocial Spy Enabled. You can now see private messages."
+  spy-disabled: "&cSocial Spy Disabled."
+  msg-format-send: "&d[Me -> {target}] &f{message}"
+  msg-format-receive: "&d[{player} -> Me] &f{message}"
+  staffchat-on: "&aStaff Chat toggled ON."
+  staffchat-off: "&cStaff Chat toggled OFF."
+  staff-chat-format: "&8[&cStaff&8] &c{player} &8» &e{message}"
+  socialspy-format: "&8[&cSpy&8] &7{sender} -> {target}: &f{message}"
+  cannot-message: "&cYou cannot message this player (they may have ignored you)."
+  no-reply: "&cYou have nobody to reply to."
+  
+  # Games & Broadcasting
+  broadcast-prefix: "&8[&bBroadcast&8] &e{message}"
+  game-start: "&e&lᴄʜᴀᴛ ɢᴀᴍᴇ &8» &f{task}"
+  game-win: "&e&lᴄʜᴀᴛ ɢᴀᴍᴇ &8» &b{player} &fᴡᴏɴ &a${reward}&f! ᴀɴsᴡᴇʀ: &e{answer}"
+
+# =============================================================================
+# AUDIO ENGINE (BUKKIT SOUNDS)
+# =============================================================================
+# Use valid Bukkit Sound names. 
+# Full List: https://jd.papermc.io/paper/1.21/org/bukkit/Sound.html
+sounds:
+  click: "UI_BUTTON_CLICK"
+  success: "ENTITY_VILLAGER_YES"
+  fail: "ENTITY_VILLAGER_NO"
+  mention: "ENTITY_EXPERIENCE_ORB_PICKUP"
+  warn: "ENTITY_ENDER_DRAGON_GROWL"
+  clear-chat: "ENTITY_PLAYER_LEVELUP"
+  tpa-tick: "BLOCK_NOTE_BLOCK_HAT"
+  tpa-success: "ENTITY_ENDERMAN_TELEPORT"
