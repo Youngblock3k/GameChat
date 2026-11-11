@@ -1,0 +1,27 @@
+plugins { id 'java' }
+// Test bots for GyxerChat. One build per Minecraft version:  gradlew -Ptarget=26.2 classes libs helperJar
+def mcpl = ['1.21.11': '1.21.11-1', '26.1': '26.1-1', '26.2': '26.2', '26.3': '26.3-3']
+def target = (findProperty('target') ?: '26.3').toString()
+layout.buildDirectory = file("build-$target")
+repositories {
+	mavenCentral()
+	maven { url = 'https://repo.opencollab.dev/maven-releases/' }
+	maven { url = 'https://repo.opencollab.dev/maven-snapshots/' }
+	maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+}
+sourceSets { helper }
+dependencies {
+	implementation "org.geysermc.mcprotocollib:protocol:${mcpl[target]}"
+	helperCompileOnly 'io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT'
+}
+tasks.withType(JavaCompile).configureEach { it.options.release = 25; it.options.encoding = 'UTF-8' }
+tasks.named('compileHelperJava') { options.release = 21 }
+tasks.register('helperJar', Jar) {
+	from sourceSets.helper.output
+	archiveFileName = 'GyxerTestHelper.jar'
+	destinationDirectory = layout.buildDirectory.dir('helper')
+}
+tasks.register('libs', Copy) {
+	from configurations.runtimeClasspath
+	into layout.buildDirectory.dir('libs-all')
+}
