@@ -1,0 +1,10 @@
+name: GyxerTestHelper
+version: '1.0'
+main: gxhelper.GxHelper
+api-version: '1.21'
+description: 'TEST ONLY - console commands for the GyxerChat bot test.'
+commands:
+  gxt:
+    permission: gxt.use
+permissions:
+  gxt.use: { default: op }
